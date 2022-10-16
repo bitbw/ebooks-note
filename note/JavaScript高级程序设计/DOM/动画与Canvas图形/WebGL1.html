@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>canvas</title>
+    <style>
+        * {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="file" name="" id="input" >
+    <canvas id="glcanvas" width="640" height="480">
+        你的浏览器似乎不支持或者禁用了 HTML5 <code>&lt;canvas&gt;</code> 元素。
+    </canvas>
+
+
+    </div>
+    <script>
+
+        /* 
+        // https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL
+         1 初识 WebGL
+         WebGL 使得在支持 HTML 的 canvas 标签的浏览器中，不需要安装任何插件，
+         便可以使用基于 OpenGL ES 2.0 的 API 在 canvas 中进行 2D 和 3D 渲染。WebGL 
+         程序包括用 JavaScript 写的控制代码，以及在图形处理单元（GPU, Graphics Processing Unit）
+         中执行的着色代码（GLSL，注：GLSL 为 OpenGL 着色语言）。WebGL 元素可以和其他 HTML 元素混合使用，
+         并且可以和网页其他部分或者网页背景结合起来。
+
+        本文将向您介绍 WebGL 的基本用法。此处假定您对三维图形方面的数学知识已经有一定的理解，
+        本文也不会试图向您教授 3D 图像概念本身。
+
+        本文的代码也可以在这里下载 webgl-examples GitHub repository 。
+
+        THREE.js和BABYLON.js等很多框架封装了 WebGL，提供了各个平台之间的兼容性。
+        使用这些框架而非原生的 WebGL 可以更容易地开发 3D 应用和游戏。
+        */
+        + async function (window) {
+            document.querySelector("#input").addEventListener("change", (e) => {
+                console.log("Bowen: e", e)
+
+            })
+            await new Promise((resolve, reject) => {
+                window.addEventListener("load", async () => {
+                    resolve()
+                });
+            })
+            const canvas = document.querySelector("#glcanvas");
+            // 初始化 WebGL 上下文
+            const gl = canvas.getContext("webgl");
+
+            // 确认 WebGL 支持性
+            if (!gl) {
+                alert("无法初始化 WebGL，你的浏览器、操作系统或硬件等可能不支持 WebGL。");
+                return;
+            }
+
+            // 使用完全不透明的黑色清除所有图像
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            // 用上面指定的颜色清除缓冲区
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+        }(window)
+
+    </script>
+</body>
+
+</html>

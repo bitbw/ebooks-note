@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>动画</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      #status {
+        width: 0px;
+        height: 10px;
+        background-color: skyblue;
+      }
+      #height1000 {
+        height: 1000px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="status"></div>
+    <div id="height1000"></div>
+    <script>
+      window.onload = () => {
+        function getWidth(width) {
+          width += "";
+          return width.replace(/%|px/g, "");
+        }
+        // =====================================================================
+        // setInterval 动画
+        // =====================================================================
+        function doAnimation2() {
+          let div = document.getElementById("status");
+          if (getWidth(div.style.width) >= 100) {
+            return;
+          }
+          let progress =
+            (parseInt(getWidth(div.style.width), 10) || 0) + 1 + "%";
+          div.style.width = progress;
+        }
+
+        // (function () {
+        //   function updateAnimations() {
+        //     doAnimation2();
+        //     // 其他任务
+        //   }
+        //   setInterval(updateAnimations, 100);
+        // })();
+        // =====================================================================
+        // requestAnimationFrame 动画
+        // =====================================================================
+        let start;
+        let interval = 0; // 两次动画时间间隔
+        function updateProgress(timestamp) {
+          // 获取时间间隔
+          if (!start) start = timestamp;
+          interval = Math.round(timestamp) - Math.round(start);
+          start = timestamp;
+          //  最佳刷新频率 16 毫秒
+          console.log("Bowen: updateProgress -> interval", interval);
+          console.log("Bowen: updateProgress -> timestamp", timestamp);
+          var div = document.getElementById("status");
+          let progress =
+            (parseInt(getWidth(div.style.width), 10) || 0) + 1 + "%";
+          console.log("Bowen: updateProgress -> progress", progress);
+          div.style.width = progress;
+          if (div.style.width != "100%") {
+            requestAnimationFrame(updateProgress);
+          }
+        }
+        // requestAnimationFrame 跟 setTimeout 类似 ,只不过调用的间隔时间 interval 是由浏览器确定
+        // start = performance.now();
+        let id = requestAnimationFrame(updateProgress);
+        // // 取消
+        // cancelAnimationFrame(id);
+        // =====================================================================
+        // 通过 requestAnimationFrame 节流
+        // =====================================================================
+        let enabled = true; // 开关
+        function expensiveOperation(timestamp) {
+          if (!start) start = timestamp;
+          interval = Math.round(timestamp) - Math.round(start);
+          start = timestamp;
+          console.log("Bowen: updateProgress -> interval", interval);
+          console.log("Bowen: updateProgress -> timestamp", timestamp);
+          console.log("Invoked at", Date.now());
+        }
+        // window.addEventListener("scroll", () => {
+        //   // 可以确保每次重绘最多只调用一次回调函数 expensiveOperation (就是像相当于设置了一个16毫秒的节流)
+        //   requestAnimationFrame(expensiveOperation);
+        // });
+
+        window.addEventListener("scroll", () => {
+          /*
+            配合使用一个计时器来限制操作执行的频率。这样，计时器可以限制实际的操作执行间隔，
+            而requestAnimationFrame控制在浏览器的哪个渲染周期中执行 
+         */
+          if (enabled) {
+            enabled = false;
+            requestAnimationFrame(expensiveOperation);
+            // 设置一个 1000 的节流
+            setTimeout(() => (enabled = true), 1000);
+          }
+        });
+      };
+    </script>
+  </body>
+</html>

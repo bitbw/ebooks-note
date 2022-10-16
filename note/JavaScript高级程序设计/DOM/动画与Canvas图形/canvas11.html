@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>canvas</title>
+  <style>
+    * {
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="drawing" width="200" height="200">A drawing of something.</canvas>
+  <canvas id="drawing1" width="200" height="200">A drawing of something.</canvas>
+
+  </div>
+  <script>
+    /* 
+     11 合成2D上下文中绘制的所有内容都会应用两个属性：globalAlpha和globalComposition Operation，
+     其中，globalAlpha属性是一个范围在0~1的值（包括0和1），用于指定所有绘制内容的透明度，默认值为0。
+     如果所有后来的绘制都需要使用同样的透明度，那么可以将globalAlpha设置为适当的值，执行绘制，
+     然后再把globalAlpha设置为0。比如：
+    */
+    + async function (window) {
+      await new Promise((resolve, reject) => {
+        window.addEventListener("load", async () => {
+          resolve()
+        });
+      })
+      let drawing = document.getElementById("drawing");
+      // 确保浏览器支持<canvas>
+      if (!drawing.getContext) {
+        return
+      }
+      const context = drawing.getContext("2d")
+      // // 绘制红色矩形
+      // context.fillStyle = "#ff0000";
+      // context.fillRect(10, 10, 50, 50);
+      // // 修改全局透明度
+      // context.globalAlpha = 0.5;
+      // // 绘制蓝色矩形
+      // context.fillStyle = "rgba(0,0,255,1)";
+      // context.fillRect(30, 30, 50, 50);
+      // // 重置
+      // context.globalAlpha = 0;
+      /* 
+      在这个例子中，蓝色矩形是绘制在红色矩形上面的。因为在绘制蓝色矩形前globalAlpha被设置成了0.5，所以蓝色矩形就变成半透明了，
+      从而可以透过它看到下面的红色矩形
+      */
+      /* 
+      https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
+      globalCompositionOperation属性表示新绘制的形状如何与上下文中已有的形状融合。这个属性是一个字符串，可以取下列值。
+      ❑ source-over：默认值，新图形绘制在原有图形上面。
+      ❑ source-in：新图形只绘制出与原有图形重叠的部分，画布上其余部分全部透明。
+      ❑ source-out：新图形只绘制出不与原有图形重叠的部分，画布上其余部分全部透明。
+      ❑ source-atop：新图形只绘制出与原有图形重叠的部分，原有图形不受影响。
+      ❑ destination-over：新图形绘制在原有图形下面，重叠部分只有原图形透明像素下的部分可见。
+      ❑ destination-in：新图形绘制在原有图形下面，画布上只剩下二者重叠的部分，其余部分完全透明。
+      ❑ destination-out：新图形与原有图形重叠的部分完全透明，原图形其余部分不受影响。
+      ❑ destination-atop：新图形绘制在原有图形下面，原有图形与新图形不重叠的部分完全透明。
+      ❑ lighter：新图形与原有图形重叠部分的像素值相加，使该部分变亮。
+      ❑ copy：新图形将擦除并完全取代原有图形。
+      ❑ xor：新图形与原有图形重叠部分的像素执行“异或”计算。
+      */
+
+      // 绘制红色矩形
+      context.fillStyle = "#ff0000";
+      context.fillRect(10, 10, 50, 50);
+      // 设置合成方式
+      context.globalCompositeOperation = "destination-over";
+      // 绘制蓝色矩形
+      context.fillStyle = "rgba(0,0,255,1)";
+      context.fillRect(30, 30, 50, 50);
+      context.globalCompositeOperation = "source-over";
+      context.fillStyle = "rgba(123,123,255,1)";
+      context.fillRect(60, 60, 50, 50);
+      context.globalCompositeOperation = "xor";
+      context.fillStyle = "rgba(244,13,123,1)";
+      context.fillRect(99, 99, 50, 50);
+
+    }(window)
+
+  </script>
+</body>
+
+</html>

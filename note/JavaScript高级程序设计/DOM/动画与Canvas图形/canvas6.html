@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>canvas</title>
+  <style></style>
+</head>
+
+<body>
+  <canvas id="drawing" width="200" height="200">A drawing of something.</canvas>
+
+  <img id="source" src="https://random.dog/68b11de5-a94b-4f20-ab7f-ea754fae84a7.jpg" style="margin: 20px;" >
+  </div>
+  <script>
+    /* 
+      6 绘制图像2D绘图上下文内置支持操作图像。如果想把现有图像绘制到画布上，
+      可以使用drawImage()方法。这个方法可以接收3组不同的参数，并产生不同的结果。
+      最简单的调用是传入一个HTML的<img>元素，以及表示绘制目标的x和y坐标，
+      结果是把图像绘制到指定位置。比如：
+      // https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/drawImage
+        */
+    document.addEventListener("DOMContentLoaded", async () => {
+      let drawing = document.getElementById("drawing");
+      // 确保浏览器支持<canvas>
+      if (drawing.getContext) {
+        const context = drawing.getContext("2d");
+        var image = document.getElementById('source');
+        /*
+        drawImage()提供9个参数：
+        要绘制的图像、源图像x坐标、源图像y坐标、源图像宽度、源图像高度、目标区域x坐标、目标区域y坐标、目标区域宽度和目标区域高度。
+        这个重载后的drawImage()方法可以实现最大限度的控制，比如： 
+         */
+        image.addEventListener("load", () => {
+          document.addEventListener("mousemove", (e) => {
+            const {
+              x,
+              y,
+              offsetX,
+              offsetY,
+              clientX,
+              clientY,
+            } = e
+            console.log("Bowen:  x", x)
+            console.log("Bowen:  y", y)
+            console.log("Bowen:  offsetX", offsetX)
+            console.log("Bowen:  offsetY", offsetY)
+            console.log("Bowen:  clientX", clientX)
+            console.log("Bowen:  clientY", clientY)
+            console.log("Bowen: e", e)
+            if (e.target.id == "source") {
+              // 鼠标移动到目标区域 context 放大 3 倍显示 =>  180/60 = 3, offsetY - 30 使其定位到中心
+              context.drawImage(image, offsetX - 30, offsetY - 30, 60, 60, 10, 10, 180, 180);
+            }
+            
+          })
+          let rect = image.getBoundingClientRect()
+          console.log("Bowen: rect", rect)
+          // 原图坐标 0 0 剪切大小 20 *20 的图片,  放到 canvas 中 10 10 位置 放大为 100 * 100
+          context.drawImage(image, 0, 0, 20, 20, 10, 10, 100, 100);
+        })
+        // context.drawImage(image, 10, 10);
+
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- <button class="default" onclick="onlick(event,this)">click</button> -->
+    <button class="default">click</button>
+    <a href="http://baidu.com">111111</a>
+    <script>
+      function onlick(e, _this) {
+        console.log("Bowen: onlick -> e", e);
+        console.log("Bowen: onlick -> this", _this);
+      }
+      /*       window.onload = function () {
+        document.querySelector(".default").addEventListener("click", onlick);
+        // document.addEventListener("contextmenu", (e) => {
+        //   console.log("Bowen: contextmenu -> e", e);
+        //   e.preventDefault();
+        // });
+      }; */
+
+      /*       
+      window.addEventListener("beforeunload", (event) => {
+        let message = "I'm really going to miss you if you go.";
+        event.returnValue = message;
+        return message;
+      }); */
+      document.addEventListener("readystatechange", function (event) {
+        if (
+          document.readyState == "interactive" ||
+          document.readyState == "complete"
+        ) {
+          document.removeEventListener("readystatechange", arguments.callee);
+          console.log("Content loaded");
+        }
+      });
+      //   document.addEventListener("readystatechange", (event) => {
+      //   console.log("Bowen: readystatechange", event)
+      //     console.log("Bowen:  document.readyState", document.readyState);
+      //     if (document.readyState == "interactive") {
+      //       console.log("Content loaded");
+      //     }
+      //   });
+      document.addEventListener("DOMContentLoaded", (e) => {
+        console.log("Bowen: DOMContentLoaded", e);
+        // let def = document.querySelector(".default");
+        // console.log("Bowen: default", def);
+      });
+      setTimeout(() => {
+        console.log("Bowen: setTimeout");
+      }, 0);
+
+      window.addEventListener("load", (e) => {
+        console.log("Bowen:window load", e);
+      });
+      (function () {
+        let showCount = 0;
+        //   window.addEventListener("load", () => {
+        //     console.log("Load fired");
+        //   });
+        window.addEventListener("pageshow", () => {
+          showCount++;
+          console.log(`Show has been fired ${showCount} times.`);
+        });
+      })();
+    </script>
+  </body>
+</html>

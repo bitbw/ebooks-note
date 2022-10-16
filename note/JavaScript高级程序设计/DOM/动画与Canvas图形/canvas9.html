@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>canvas</title>
+  <style></style>
+</head>
+
+<body>
+  <img id="source" src="https://i.picsum.photos/id/970/100/100.jpg?hmac=tv6Z9pRPZU9RsVaBnUPa-aXUxqZJHD6tkWujltTdtak" style="margin: 20px;">
+  <br />
+  <canvas id="drawing" width="1200" height="400">A drawing of something.</canvas>
+  </div>
+  <script>
+    /* 
+      9 图案图案是用于填充和描画图形的重复图像。要创建新图案，可以调用createPattern()方法并传入两个参数：
+      一个HTML <img>元素和一个表示该如何重复图像的字符串。第二个参数的值与CSS的background-repeat属性是一样的，
+      包括"repeat"、"repeat-x"、"repeat-y"和"no-repeat"。比如
+      记住，跟渐变一样，图案的起点实际上是画布的原点(0, 0)。将填充样式设置为图案，表示在指定位置而不是开始绘制的位置显示图案。
+      传给 createPattern() 方法的第一个参数也可以是<video>元素或者另一个<canvas>元素。
+    */
+    window.addEventListener("load",async () => {
+      let drawing = document.getElementById("drawing");
+      // 确保浏览器支持<canvas>
+      if (drawing.getContext) {
+        let context = drawing.getContext("2d");
+        let image = document.images[0]
+        let pattern = context.createPattern(image, "repeat");
+        // pattern 复制给 fillStyle
+        context.fillStyle = pattern;
+        // 绘制矩形
+        context.fillRect(100, 100, 400, 400);
+
+      }
+    });
+  </script>
+</body>
+
+</html>

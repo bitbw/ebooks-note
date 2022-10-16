@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>canvas</title>
+    <style></style>
+  </head>
+  <body>
+    <canvas id="drawing" width="200" height="200"
+      >A drawing of something.</canvas
+    >
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // =======================================================================
+        //   2D绘图上下文
+        // =======================================================================
+
+        let drawing = document.getElementById("drawing");
+        // 确保浏览器支持<canvas>
+        if (drawing.getContext) {
+          let context = drawing.getContext("2d");
+          /*
+            1.填充和描边
+            2D上下文有两个基本绘制操作：填充和描边。填充以指定样式（颜色、渐变或图像）自动填充形状，而描边只为图形边界着色。
+            大多数2D上下文操作有填充和描边的变体，显示效果取决于两个属性：fillStyle和strokeStyle。
+            这两个属性可以是字符串、渐变对象或图案对象，默认值都为"#000000"。
+            字符串表示颜色值，可以是CSS支持的任意格式：名称、十六进制代码、rgb、rgba、hsl或hsla。比如：
+         */
+          // 这里把strokeStyle设置为"red"（CSS颜色名称），把fillStyle设置为"#0000ff"（蓝色）。
+          // 所有与描边和填充相关的操作都会使用这两种样式，除非再次修改。这两个属性也可以是渐变或图
+          context.strokeStyle = "red";
+          context.fillStyle = "#0000ff";
+          /*
+            2. 绘制矩形
+            矩形是唯一一个可以直接在2D绘图上下文中绘制的形状。与绘制矩形相关的方法有3个：
+            fillRect()、strokeRect()和clearRect()。这些方法都接收4个参数：
+            矩形x坐标、矩形y坐标、矩形宽度和矩形高度。 这几个参数的单位都是像素。
+         */
+          /*
+            fillRect()方法用于以指定颜色在画布上绘制并填充矩形。填充的颜色使用fillStyle属性指定。来看下面的例子
+           */
+          // 绘制红色矩形
+          context.fillStyle = "#ff0000";
+          // fillRect参数 x轴 y轴 w宽度 h高度
+          context.fillRect(10, 10, 50, 50);
+          // 绘制半透明蓝色矩形
+          context.fillStyle = "rgba(0,0,255,0.5)";
+          // x y w h
+          context.fillRect(30, 30, 50, 50);
+          /*
+            strokeRect()方法使用通过strokeStyle属性指定的颜色绘制矩形轮廓。下面是一个例子：
+           */
+          // 绘制红色边框
+          context.strokeStyle = "#ff0000";
+          // strokeRect参数 x轴 y轴 w宽度 h高度
+          context.strokeRect(10, 10, 50, 50);
+          // 绘制半透明蓝色边框
+          context.strokeStyle = "rgba(0,0,255,0.5)";
+          // x y w h
+          context.strokeRect(30, 30, 50, 50);
+          /*
+          使用clearRect()方法可以擦除画布中某个区域。该方法用于把绘图上下文中的某个区域变透明。通过先绘制形状再擦除指定区域，可以创建出有趣的效果，比如从已有矩形中开个孔。来看下面的例子：
+           */
+          // 在重叠区域擦除出一个矩形区域
+          context.clearRect(40, 40, 10, 10);
+        }
+      });
+    </script>
+  </body>
+</html>

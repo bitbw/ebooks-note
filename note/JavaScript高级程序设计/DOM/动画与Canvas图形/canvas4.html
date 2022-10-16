@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>canvas</title>
+    <style></style>
+  </head>
+  <body>
+    <canvas id="drawing" width="200" height="200"
+      >A drawing of something.</canvas
+    >
+    <canvas id="drawing2" width="200" height="200"
+      >A drawing of something.</canvas
+    >
+    <script>
+      /* 
+            4 绘制文本
+            文本和图像混合也是常见的绘制需求，因此2D绘图上下文还提供了绘制文本的方法，即fillText()和strokeText()。
+            这两个方法都接收4个参数：要绘制的字符串、x坐标、y坐标和可选的最大像素宽度。而且，这两个方法最终绘制的结果都取决于以下3个属性
+          */
+      document.addEventListener("DOMContentLoaded", async () => {
+        let drawing = document.getElementById("drawing");
+        // 确保浏览器支持<canvas>
+        if (drawing.getContext) {
+          let context = drawing.getContext("2d");
+          // 创建路径
+          context.beginPath();
+          context.moveTo(199, 100);
+          context.arc(100, 100, 99, 0, 2 * Math.PI, false);
+          // 绘制内圆
+          context.moveTo(194, 100);
+          context.arc(100, 100, 94, 0, 2 * Math.PI, false);
+          // 绘制分针
+          context.moveTo(100, 100);
+          context.lineTo(100, 15);
+          // 绘制时针
+          context.moveTo(100, 100);
+          context.lineTo(35, 100);
+
+          // 描画路径
+          context.strokeStyle = "rgba(0,0,255,0.5)";
+          context.stroke();
+          /* 
+            4 绘制文本
+            文本和图像混合也是常见的绘制需求，因此2D绘图上下文还提供了绘制文本的方法，即fillText()和strokeText()。
+            这两个方法都接收4个参数：要绘制的字符串、x坐标、y坐标和可选的最大像素宽度。而且，这两个方法最终绘制的结果都取决于以下3个属性
+          */
+          context.font = "bold 14px Arial";
+          context.textBaseline = "middle";
+          // 居中
+          context.textAlign = "center";
+          context.fillStyle = "rgba(0,0,255,0.5)";
+          context.fillText("12", 100, 20);
+          // 与开头对齐
+          context.textAlign = "start";
+          context.fillText("12", 100, 40);
+          // 与末尾对齐
+          context.textAlign = "end";
+          context.fillText("12", 100, 60);
+        }
+
+        let drawing2 = document.getElementById("drawing2");
+        // 确保浏览器支持<canvas>
+        if (drawing2.getContext) {
+          let context = drawing2.getContext("2d");
+          /* 
+        自动文本 fontSize
+        由于绘制文本很复杂，特别是想把文本绘制到特定区域的时候，因此2D上下文提供了用于辅助确定文本大小的measureText()方法。
+        这个方法接收一个参数，即要绘制的文本，然后返回一个TextMetrics对象。这个返回的对象目前只有一个属性width
+        ，不过将来应该会增加更多度量指标。measureText()方法使用font、textAlign和textBaseline属性当前的值计算绘制指定文本后的大小
+        。例如，假设要把文本"Hello world! "放到一个140像素宽的矩形中，可以使用以下代码，从100像素的字体大小开始计算，不断递减，
+        直到文本大小合适：
+        */
+          let fontSize = 100;
+          const targetText = "Hello world! ";
+          context.fillStyle = "rgba(0,0,255,0.5)";
+          context.font = fontSize + "px Arial";
+          let width = context.measureText(targetText).width; // 测量 fontSize 100 时 "Hello world!213" 的长度
+          while (width > 140) {
+            fontSize--;
+            context.font = fontSize + "px Arial";
+            width = context.measureText(targetText).width;
+          }
+          context.textAlign = "start";
+          // context.fillText(targetText, 10, 20);
+          context.fillText("Font size is " + fontSize + "px", 10, 50);
+          context.fillText(targetText, 10, 20, 50); // 通过最大像素宽度 压缩长度
+          context.strokeStyle = "rgba(0,0,255,0.5)";
+          context.strokeRect(0, 0, 140, 30);
+        }
+      });
+    </script>
+  </body>
+</html>

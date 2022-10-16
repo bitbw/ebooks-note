@@ -1,0 +1,16 @@
+{
+  "name": "module_commonjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "exports": {
+    "require": "./index.js",
+    "import": "./esm/wrapper.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

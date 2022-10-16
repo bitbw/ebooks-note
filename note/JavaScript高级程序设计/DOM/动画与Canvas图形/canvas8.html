@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>canvas</title>
+  <style></style>
+</head>
+
+<body>
+  <canvas id="drawing" width="200" height="200">A drawing of something.</canvas>
+  <canvas id="drawing1" width="200" height="200">A drawing of something.</canvas>
+
+  </div>
+  <script>
+    /* 
+     8 渐变渐变通过CanvasGradient的实例表示，在2D上下文中创建和修改都非常简单。
+     要创建一个新的线性渐变，可以调用上下文的createLinearGradient()方法。
+     这个方法接收4个参数：起点x坐标、起点y坐标、终点x坐标和终点y坐标。调用之后，
+     该方法会以指定大小创建一个新的CanvasGradient对象并返回实例。有了gradient对象后，
+     接下来要使用addColorStop()方法为渐变指定色标。这个方法接收两个参数：色标位置和CSS颜色字符串。
+     色标位置通过0～1范围内的值表示，0是第一种颜色，1是最后一种颜色。比如：
+    */
+
+    /**
+     * @description: 生成配备对应图形的线性渐变 参数同 fillRect
+     * @param {*} context
+     * @param {*} x  
+     * @param {*} y
+     * @param {*} width
+     * @param {*} height
+     * @return {*}
+     */
+    function createRectLinearGradient(context, x, y, width, height) {
+      return context.createLinearGradient(x, y, x + width, y + height);
+    }
+    /**
+     * @description: 生成配备对应图形的放射性渐变 参数同 fillRect insideRadius 内圆的半径   outsideRadius 内外的半径
+     * @param {*} context
+     * @param {*} x  
+     * @param {*} y
+     * @param {*} width
+     * @param {*} height
+     * @return {*}
+     */
+    function createRadialGradient(context, x, y, width, height, insideRadius, outsideRadius) {
+      // 计算圆心
+      let originX = Math.round(x + width / 2)  
+      let originY = Math.round(y + height / 2)  
+      return context.createRadialGradient(originX, originY, insideRadius, originX, originY, outsideRadius);
+    }
+    document.addEventListener("DOMContentLoaded", async () => {
+      let drawing = document.getElementById("drawing");
+      // 确保浏览器支持<canvas>
+      if (drawing.getContext) {
+        let context = drawing.getContext("2d");
+        /*
+        这个gradient对象现在表示的就是在画布上从(30, 30)到(70,70)绘制一个渐变。
+        渐变的起点颜色为白色，终点颜色为黑色。可以把这个对象赋给fillStyle或strokeStyle属性
+        ，从而以渐变填充或描画绘制的图形：
+         */
+        // let gradient = context.createLinearGradient(30, 30, 70, 70);
+        let gradient = createRectLinearGradient(context, 50, 50, 50, 50);
+        // gradient.addColorStop(0, "white");
+        // gradient.addColorStop(1, "black");
+        gradient.addColorStop(0, "#ccfbff");
+        gradient.addColorStop(1, "#ef96c5");
+        // 红色矩形
+        context.fillStyle = "#ff0000"
+        context.fillRect(10, 10, 50, 50)
+        // 渐变矩形
+        context.fillStyle = gradient
+        // context.fillRect(30,30,50,50)
+        /* 如果矩形没有绘制到渐变的范围内，则只会显示部分渐变 通过 createRectLinearGradient 解决 */
+        context.fillRect(50, 50, 50, 50)
+      }
+      /*
+      8-2 径向渐变（或放射性渐变）要使用createRadialGradient()方法来创建。
+      这个方法接收6个参数，分别对应两个圆形圆心的坐标和半径。前3个参数指定起点圆形中心的x、y坐标和半径，
+      后3个参数指定终点圆形中心的x、y坐标和半径。在创建径向渐变时，可以把两个圆形想象成一个圆柱体的两个圆形表面。
+      把一个表面定义得小一点，另一个定义得大一点，就会得到一个圆锥体。然后，通过移动两个圆形的圆心，
+      就可以旋转这个圆锥体。要创建起点圆心在形状中心并向外扩散的径向渐变，需要将两个圆形设置为同心圆。
+      比如，要在前面例子中矩形的中心创建径向渐变，则渐变的两个圆形的圆心都必须设置为(55, 55)。
+      这是因为矩形的起点是(30, 30)，终点是(80, 80)。代码如下 
+       */
+      let drawing1 = document.getElementById("drawing1");
+      if (drawing1.getContext) {
+        let context = drawing1.getContext("2d");
+        let gradientContainerData = [60, 100, 100, 100]
+        let gradient = createRadialGradient(context, ...gradientContainerData, 5, 70)
+        // gradient.addColorStop(0, "white");
+        // gradient.addColorStop(1, "black");
+        gradient.addColorStop(0, "#ccfbff");
+        gradient.addColorStop(1, "#ef96c5");
+        // 红色矩形
+        context.fillStyle = "#6cc6cb"
+        context.fillRect(10, 10, 50, 50)
+        // 渐变矩形
+        context.fillStyle = gradient
+        context.fillRect(...gradientContainerData)
+      }
+    });
+  </script>
+</body>
+
+</html>

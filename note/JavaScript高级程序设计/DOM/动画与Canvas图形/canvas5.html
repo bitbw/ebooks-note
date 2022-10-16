@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>canvas</title>
+    <style></style>
+  </head>
+  <body>
+    <canvas id="drawing" width="200" height="200" style="display:none;"
+      >A drawing of something.</canvas
+    >
+    <canvas id="drawing1" width="500" height="500"
+      >A drawing of something.</canvas
+    >
+    <script>
+      /* 
+           5 变换
+           上下文变换可以操作绘制在画布上的图像。2D绘图上下文支持所有常见的绘制变换。
+           在创建绘制上下文时，会以默认值初始化变换矩阵，从而让绘制操作如实应用到绘制结果上。
+           对绘制上下文应用变换，可以导致以不同的变换矩阵应用绘制操作，从而产生不同的结果。以下方法可用于改变绘制上下文的变换矩阵。
+           ❑ rotate(angle)：围绕原点把图像旋转angle弧度。❑ scale(scaleX, scaleY)：通过在x轴乘以scaleX、在y轴乘以scaleY来缩放图像。
+           scaleX和scaleY的默认值都是1.0。
+           ❑ translate(x, y)：把原点移动到(x, y)。执行这个操作后，坐标(0, 0)就会变成(x, y)。
+           ❑ transform(m1_1, m1_2, m2_1, m2_2, dx, dy)：像下面这样通过矩阵乘法直接修改矩阵。
+                  m1_1 m1_2 dx
+                  m2_1 m2_2 dy
+                  0     0     1
+          */
+      document.addEventListener("DOMContentLoaded", async () => {
+        let drawing = document.getElementById("drawing");
+        // 确保浏览器支持<canvas>
+        if (drawing.getContext) {
+          let context = drawing.getContext("2d");
+          // 创建路径
+          context.beginPath();
+          context.moveTo(199, 100);
+          context.arc(100, 100, 99, 0, 2 * Math.PI, false);
+          // 绘制内圆
+          context.moveTo(194, 100);
+          context.arc(100, 100, 94, 0, 2 * Math.PI, false);
+
+          // 移动原点到表盘中心
+          context.translate(100, 100);
+          // 旋转表针
+          context.rotate(1);
+
+          // 绘制分针
+          context.moveTo(0, 0);
+          context.lineTo(0, -85);
+          // 绘制时针
+          context.moveTo(0, 0);
+          context.lineTo(-65, 0);
+
+          // 描画路径
+          context.strokeStyle = "rgba(0,0,255,0.5)";
+          context.stroke();
+
+          /* 
+          所有这些变换，包括fillStyle和strokeStyle属性，会一直保留在上下文中，直到再次修改它们。
+          虽然没有办法明确地将所有值都重置为默认值，但有两个方法可以帮我们跟踪变化。
+          如果想着什么时候再回到当前的属性和变换状态，可以调用save()方法。调用这个方法后，
+          所有这一时刻的设置会被放到一个暂存栈中。保存之后，可以继续修改上下文。而在需要恢复之前的上下文时，
+          可以调用restore()方法。这个方法会从暂存栈中取出并恢复之前保存的设置。多次调用save()方法可以在暂存栈中存储多套设置，
+          然后通过restore()可以系统地恢复。下面来看一个例子：
+          */
+        }
+        let drawing1 = document.getElementById("drawing1");
+        // 确保浏览器支持<canvas>
+        if (drawing1.getContext) {
+          let context = drawing1.getContext("2d");
+
+          /* 
+          所有这些变换，包括fillStyle和strokeStyle属性，会一直保留在上下文中，直到再次修改它们。
+          虽然没有办法明确地将所有值都重置为默认值，但有两个方法可以帮我们跟踪变化。
+          如果想着什么时候再回到当前的属性和变换状态，可以调用save()方法。调用这个方法后，
+          所有这一时刻的设置会被放到一个暂存栈中。保存之后，可以继续修改上下文。而在需要恢复之前的上下文时，
+          可以调用restore()方法。这个方法会从暂存栈中取出并恢复之前保存的设置。多次调用save()方法可以在暂存栈中存储多套设置，
+          然后通过restore()可以系统地恢复。下面来看一个例子：
+          */
+          context.fillStyle = "#ff0000";
+          context.save(); // 压栈
+          context.fillStyle = "#00ff00";
+          context.translate(100, 100);
+          context.save(); // 压栈
+          context.fillStyle = "#0000ff";
+          context.fillRect(0, 0, 100, 200); // 在(100, 100)绘制蓝色矩形
+          context.restore(); // 弹栈 将栈中 save 最顶部的样式应用; 相当于执行 -> context.fillStyle = "#00ff00";  context.translate(100, 100)
+          context.fillRect(10, 10, 100, 200); // 在(100, 100)绘制绿色矩形
+          context.restore(); // 弹栈 执行 context.fillStyle = "#ff0000";
+          context.fillRect(0, 0, 100, 200); // 在(0, 0)绘制红色矩形
+          /* 
+          注意，save()方法只保存应用到绘图上下文的设置和变换，不保存绘图上下文的内容。
+          */
+        }
+      });
+    </script>
+  </body>
+</html>

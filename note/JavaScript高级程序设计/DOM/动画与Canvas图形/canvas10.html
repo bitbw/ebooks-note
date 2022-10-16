@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>canvas</title>
+  <style>
+    * {
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="drawing" width="200" height="200">A drawing of something.</canvas>
+  <canvas id="drawing1" width="200" height="200">A drawing of something.</canvas>
+  <br />
+  <img id="source" crossorigin="anonymous"
+    src="https://bitbw.top/public/img/my_gallery/%E7%94%B5%E8%84%91%E5%93%81%E7%89%8C%E7%9A%84%E5%BC%80%E6%9C%BA%E7%83%AD%E9%94%AE1-200P31H100463.jpg"
+    style="margin: 20px;">
+  </div>
+  <script>
+    function createRadialGradient(context, x, y, width, height, insideRadius, outsideRadius) {
+      // 计算圆心
+      let originX = Math.round(x + width / 2)
+      let originY = Math.round(y + height / 2)
+      return context.createRadialGradient(originX, originY, insideRadius, originX, originY, outsideRadius);
+    }
+    /* 
+     10 图像数据2D上下文中比较强大的一种能力是可以使用getImageData()方法获取原始图像数据。
+     这个方法接收4个参数：要取得数据中第一个像素的左上角坐标和要取得的像素宽度及高度。
+     例如，要从(10, 5)开始取得50像素宽、50像素高的区域对应的数据，可以这样写
+    */
+    window.addEventListener("load", async () => {
+      let drawing = document.getElementById("drawing");
+      // 确保浏览器支持<canvas>
+      if (drawing.getContext) {
+        let context = drawing.getContext("2d");
+        let gradientContainerData = [60, 100, 100, 100]
+        let gradient = createRadialGradient(context, ...gradientContainerData, 5, 70)
+        gradient.addColorStop(0, "#ccfbff");
+        gradient.addColorStop(1, "#ef96c5");
+        // 红色矩形
+        context.fillStyle = "#6cc6cb"
+        context.fillRect(10, 10, 50, 50)
+        // 渐变矩形
+        context.fillStyle = gradient
+        context.fillRect(...gradientContainerData)
+        /* 
+        10 图像数据2D上下文中比较强大的一种能力是可以使用getImageData()方法获取原始图像数据。
+        这个方法接收4个参数：要取得数据中第一个像素的左上角坐标和要取得的像素宽度及高度。
+        例如，要从(10, 5)开始取得50像素宽、50像素高的区域对应的数据，可以这样写
+        */
+        let imageData = context.getImageData(100, 100, 50, 50);
+        /* 
+        返回的对象是一个ImageData的实例。每个ImageData对象都包含3个属性：width、height和data，
+        其中，data属性是包含图像的原始像素信息的数组。每个像素在data数组中都由4个值表示，分别代表红、绿、蓝和透明度值。
+        换句话说，第一个像素的信息包含在第0到第3个值中，比如：
+        */
+        let data = imageData.data
+        let red = data[0]
+        let green = data[1]
+        let blue = data[2]
+        let alpha = data[3]
+        console.log("Bowen: data", data)
+        console.log("Bowen: red", red)
+        console.log("Bowen: green", green)
+        console.log("Bowen: blue", blue)
+        console.log("Bowen: alpha", alpha)
+
+      }
+      /* 
+      getImageData + putImageData 实现将彩色图片变为黑白图片
+      */
+      let drawing1 = document.getElementById("drawing1");
+      // 确保浏览器支持<canvas>
+      if (drawing1.getContext) {
+        let context = drawing1.getContext("2d"),
+          image = document.images[0],
+          imageData, data,
+          i, len, average,
+          red, green, blue, alpha;
+        // 绘制图像
+        context.drawImage(image, 0, 0);
+        // 取得图像数据
+        imageData = context.getImageData(0, 0, image.width, image.height);
+        // data : Uint8ClampedArray
+        data = imageData.data;
+        // 修改 RGB
+        for (i = 0, len = data.length; i < len; i += 4) {
+          red = data[i];          // R
+          green = data[i + 1];    // G
+          blue = data[i + 2];     // B
+          alpha = data[i + 3];    // A
+          // 取得RGB平均值
+          average = Math.floor((red + green + blue) / 3);
+          // 设置颜色，不管透明度
+          data[i] = average;        // R
+          data[i + 1] = average;    // G
+          data[i + 2] = average;    // B
+        }
+        // 将修改后的数据写回 ImageData 并应用到画布上显示出来
+        imageData.data = data;
+        context.putImageData(imageData, 0, 0);
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>canvas</title>
+  <style></style>
+</head>
+
+<body>
+  <canvas id="drawing" width="200" height="200">A drawing of something.</canvas>
+
+  </div>
+  <script>
+    /* 
+      阴影2D上下文可以根据以下属性的值自动为已有形状或路径生成阴影。
+      ❑ shadowColor: CSS颜色值，表示要绘制的阴影颜色，默认为黑色。
+      ❑ shadowOffsetX：阴影相对于形状或路径的x坐标的偏移量，默认为0。
+      ❑ shadowOffsetY：阴影相对于形状或路径的y坐标的偏移量，默认为0。
+      ❑ shadowBlur：像素，表示阴影的模糊量。默认值为0，表示不模糊。这些属性都可以通过context对象读写。
+      只要在绘制图形或路径前给这些属性设置好适当的值，阴影就会自动生成。比如
+        */
+    document.addEventListener("DOMContentLoaded", async () => {
+      let drawing = document.getElementById("drawing");
+      // 确保浏览器支持<canvas>
+      if (drawing.getContext) {
+        let context = drawing.getContext("2d");
+        context.shadowOffsetX = 10;
+        context.shadowOffsetY = 10;
+        context.shadowBlur = 20;
+        context.shadowColor = "rgba(0,0,0,0.5)";
+        context.save()
+        //设置阴影
+        context.shadowOffsetX = 5;
+        context.shadowOffsetY = 5;
+        context.shadowBlur = 4;
+        context.shadowColor = "rgba(0,0,0,0.5)";
+        // 绘制红色矩形
+        context.fillStyle = "#ff0000";
+        context.fillRect(10, 10, 50, 50);
+        // 绘制蓝色矩形
+        context.restore()
+        context.fillStyle = "rgba(123,123,233,1)";
+        context.fillRect(30, 30, 50, 50);
+        // context.drawImage(image, 10, 10);
+
+      }
+    });
+  </script>
+</body>
+
+</html>

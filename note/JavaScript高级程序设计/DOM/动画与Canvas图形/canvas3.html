@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>canvas</title>
+    <style></style>
+  </head>
+  <body>
+    <canvas id="drawing" width="200" height="200"
+      >A drawing of something.</canvas
+    >
+
+    <script>
+      /**
+       * @description:  canvas.toBlob prmisify
+       * @param {*} canvas
+       * @return {*} Promise blob
+       */
+      function toBlob(canvas) {
+        return new Promise((resolve, reject) => {
+          canvas.toBlob((blob) => {
+            resolve(blob);
+          });
+        });
+      }
+      /**
+       * @description: 下载图片
+       * @param {*} canvas  DOM
+       * @return {*}
+       */
+      async function dowloadCanvas(canvas) {
+        let link = document.createElement("a");
+        document.body.appendChild(link);
+        let blob = await toBlob(canvas);
+        let href = URL.createObjectURL(blob);
+        link.href = href;
+        link.download = "test.png";
+        link.click();
+        document.body.removeChild(link);
+      }
+      /**
+       * @description: canvas 转化 图片
+       * @param {*} canvas
+       * @return {*}
+       */
+      function canvas2image(canvas) {
+        // 取得图像的数据URI
+        let imgURI = canvas.toDataURL("image/png");
+        // 显示图片
+        let image = document.createElement("img");
+        image.src = imgURI;
+        document.body.appendChild(image);
+      }
+      /**
+       * @description: 动画
+       * @param {*} context
+       * @return {*}
+       */
+      function animation(context) {
+        //   动画
+        let start = 1;
+        function handle() {
+          start++;
+          context.beginPath();
+          context.arc(100, 100, 99, 0, 0.01 * start * Math.PI, false);
+          // context.strokeStyle = "rgba(0,0,255,0.5)";
+          context.stroke();
+          if (start <= 200) {
+            requestAnimationFrame(handle);
+          }
+        }
+        requestAnimationFrame(handle);
+      }
+      document.addEventListener("DOMContentLoaded", async () => {
+        /*
+             3. 绘制路径
+              (相当于一个画笔 lineTo方法就相对于在画画按下画笔挪动  moveTo相当于抬起画笔挪动)
+             2D绘图上下文支持很多在画布上绘制路径的方法。通过路径可以创建复杂的形状和线条。要绘制路径，
+             必须首先调用beginPath()方法以表示要开始绘制新路径。然后，再调用下列方法来绘制路径
+             ❑ arc(x, y, radius, startAngle, endAngle,counterclockwise)：以坐标(x, y)为圆心，以radius为半径绘制一条弧线，
+             起始角度为startAngle，结束角度为endAngle（都是弧度）。
+             最后一个参数counterclockwise表示是否逆时针计算起始角度和结束角度（默认为顺时针）。
+             ❑ arcTo(x1, y1, x2, y2, radius)：以给定半径radius，是 Canvas 2D API 根据控制点和半径绘制圆弧路径，
+             使用当前的描点 (前一个 moveTo 或 lineTo 等函数的止点)。
+             根据当前描点与给定的控制点 1 连接的直线，和控制点 1 与控制点 2 连接的直线，作为使用指定半径的圆的切线，画出两条切线之间的弧线路径。
+             ❑ bezierCurveTo(c1x, c1y, c2x, c2y, x, y)：以(c1x, c1y)和(c2x, c2y)为控制点，绘制一条从上一点到(x, y)的弧线（三次贝塞尔曲线）。
+             ❑ lineTo(x, y)：绘制一条从上一点到(x, y)的直线。
+             ❑ moveTo(x, y)：不绘制线条，只把绘制光标移动到(x,y)。
+             ❑ quadraticCurveTo(cx, cy, x, y)：以(cx, cy)为控制点，绘制一条从上一点到(x, y)的弧线（二次贝塞尔曲线）。
+             ❑ rect(x, y, width, height)：以给定宽度和高度在坐标点(x, y)绘制一个矩形。
+             这个方法与strokeRect()和fillRect()的区别在于，它创建的是一条路径，而不是独立的图形。
+             创建路径之后，可以使用closePath()方法绘制一条返回起点的线。如果路径已经完成，则既可以指定fillStyle属性并调用fill()方法来填充路径，
+             也可以指定strokeStyle属性并调用stroke()方法来描画路径，还可以调用clip()方法基于已有路径创建一个新剪切区域
+          */
+        let drawing = document.getElementById("drawing");
+        // 确保浏览器支持<canvas>
+        if (drawing.getContext) {
+          let context = drawing.getContext("2d");
+          // 创建路径
+          context.beginPath();
+          // 绘制外圆 在 x 轴 100,  y 轴 100, 半径 99,  开始弧度0  结束弧度 2 * Math.PI  一周(360°)的弧度数->(绘制出圆形)
+          /*
+            度   0° 30° 45° 60° 90° 120° 135° 150° 180° 270° 360°
+            弧度 0  π/6 π/4 π/3 π/2 2π/3 3π/4 5π/6  π   3π/2  2π
+          */
+          context.moveTo(199, 100);
+          context.arc(100, 100, 99, 0, 2 * Math.PI, false);
+          // 绘制内圆
+          context.moveTo(194, 100);
+          context.arc(100, 100, 94, 0, 2 * Math.PI, false);
+          // 绘制分针
+          context.moveTo(100, 100);
+          context.lineTo(100, 15);
+          // 绘制时针
+          context.moveTo(100, 100);
+          context.lineTo(35, 100);
+
+          // 描画路径
+          context.strokeStyle = "rgba(0,0,255,0.5)";
+          context.stroke();
+
+          //   圆角矩形
+          context.moveTo(5, 0);
+          context.lineTo(95, 0);
+          context.arcTo(100, 0, 100, 5, 5);
+          context.lineTo(100, 95);
+          context.arcTo(100, 100, 95, 100, 5);
+          context.lineTo(5, 100);
+          context.arcTo(0, 100, 0, 95, 5);
+          context.lineTo(0, 5);
+          context.arcTo(0, 0, 5, 0, 5);
+        }
+      });
+    </script>
+  </body>
+</html>
